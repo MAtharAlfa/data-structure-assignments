@@ -242,8 +242,6 @@ int main() {
             bubbleSortByKodeDescending(foo, size);
             printOutput(foo, size);
             break;
-        default:
-            break;
         }
     } while (input != 0);
     
