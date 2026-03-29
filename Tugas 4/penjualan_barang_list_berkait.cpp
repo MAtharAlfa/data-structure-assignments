@@ -207,56 +207,6 @@ float getMeanPriceList(List& first) {
     return (float)sum/totalList;
 }
 
-int linearSearch(const Barang arr[], const int size, const int key) {
-    int i = 0;
-
-    while (i < size)
-    {
-        if (arr[i].kodeBrg == key) return i;
-        i++;
-    }
-
-    return -1;
-}
-
-void bubbleSortByKodeAscending(Barang arr[], const int size) {
-    bool swapped = false;
-
-    for (size_t i = 0; i < size-1; i++)
-    {
-        for (size_t j = 0; j < size-i-1; j++)
-        {
-            if (arr[j].kodeBrg > arr[j+1].kodeBrg)
-            {
-                Barang temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-            }
-            swapped = true;
-        }
-        if (swapped == false) break;
-    }
-}
-
-void bubbleSortByKodeDescending(Barang arr[], const int size) {
-    bool swapped = false;
-
-    for (size_t i = 0; i < size-1; i++)
-    {
-        for (size_t j = 0; j < size-i-1; j++)
-        {
-            if (arr[j].kodeBrg < arr[j+1].kodeBrg)
-            {
-                Barang temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-            }
-            swapped = true;
-        }
-        if (swapped == false) break;
-    }
-}
-
 int getSumJumlahList(List& first) {
     int sum = 0;
     PtrToBarang pBantu = nullptr;
@@ -318,9 +268,7 @@ int main() {
 
         std::cout << "Pilih aksi yang ingin dilakukan:\n"
         << "1. Lihat Tabel\n"
-        << "2. Cari Barang berdasarkan Kode\n"
-        << "3. Sortir secara Naik\n"
-        << "4. Sortir secara Turun\n"
+        << "2. Masukan barang dari bawah barisan\n"
         << "0. Keluar\n\n";
 
         std::cout << "input: ";
@@ -339,10 +287,6 @@ int main() {
         case 2 :
             createElement(pNew);
             insertFirst(barang, pNew);
-            // break;
-            std::cout << "looop";
-
-        default:
             break;
         }
     } while (input != 0);
