@@ -281,6 +281,12 @@ int main() {
             break;
 
         case 1 :
+            if (barang == nullptr)
+            {
+                std::cout << "error: list kosong!\n\n";
+                break;
+            }
+            
             printOutputList(barang);
             break;
 
