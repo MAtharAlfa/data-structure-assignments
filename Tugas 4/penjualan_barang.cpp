@@ -155,8 +155,8 @@ void printOutput(Barang arr[], int size) {
 
     //bagian catatan
     std::cout << "\n" << "HARGA TERTINGGI: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
-    << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
-    << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size)
+    << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getLowest(arr, size) << "\n"
+    << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getMeanPrice(arr, size)
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 }
 
@@ -181,7 +181,7 @@ int getValueInt(int min = INT_MIN, int max = INT_MAX) {
 
 int main() {
     std::cout << "Selamat datang di Program Pengelola Penjualan Barang!\n\n";
-    Barang foo[5] = {{1, "Buku", 1000, 10}, {3, "Tas", 10000, 20}, {13, "Penghapus", 2500, 15}, {103, "Cover Buku", 9000, 12}, {21, "Pulpen", 3000, 23}};
+    Barang foo[2] = {{1, "Buku", 1, 10}, {3, "Tas", 2, 20}};
     int size = 2;
     int input = -1;
 
