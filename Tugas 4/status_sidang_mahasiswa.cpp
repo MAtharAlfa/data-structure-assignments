@@ -13,6 +13,7 @@ const int LONG_WIDTH = 20; // for UI setw
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <sstream>
 
 struct Waktu { 
     int jam; 
@@ -33,6 +34,33 @@ struct Mahasiswa {
    Waktu lama;
    std::string status;
 };
+
+Waktu getLamaSidang (Mahasiswa tersidang) {
+    if (tersidang.selesai.detik < tersidang.mulai.detik)
+    {
+        tersidang.selesai.detik += 60;
+        tersidang.selesai.menit--;
+    }
+
+    tersidang.lama.detik = tersidang.selesai.detik - tersidang.mulai.detik;
+
+    if (tersidang.selesai.menit < tersidang.mulai.menit)
+    {
+        tersidang.selesai.menit += 60;
+        tersidang.selesai.jam--;
+    }
+
+    tersidang.lama.menit = tersidang.selesai.menit - tersidang.mulai.menit;
+
+    if (tersidang.selesai.jam < tersidang.mulai.jam)
+    {
+        tersidang.selesai.jam += 24;
+    }
+
+    tersidang.lama.jam = tersidang.selesai.jam - tersidang.mulai.jam;
+
+    return tersidang.lama;
+}
 
 int getValueInt(int min = INT_MIN, int max = INT_MAX) {
     int input;
@@ -58,38 +86,12 @@ Waktu getValueWaktu(Waktu jam) {
     jam.jam = getValueInt(0, 23);
 
     std::cout << "Masukan Menit: \ninput: ";
-    jam.jam = getValueInt(0, 59);
+    jam.menit = getValueInt(0, 59);
 
     std::cout << "Masukan Detik: \ninput: ";
-    jam.jam = getValueInt(0, 59);
+    jam.detik = getValueInt(0, 59);
 
     return jam;
-}
-
-Mahasiswa getValueMahasiswa(Mahasiswa tersidang) {
-    std::cout << "Masukan NPM: \ninput: ";
-    std::cin.ignore();
-    std::getline(std::cin, tersidang.npm);
-
-    std::cout << "Masukan Nama: \ninput: ";
-    std::getline(std::cin, tersidang.nama);
-
-    std::cout << "Masukan Nilai Penguji 1: \ninput: ";
-    tersidang.nilaiPenguji1 = getValueInt(0, 100);
-
-    std::cout << "Masukan Nilai Penguji 2: \ninput: ";
-    tersidang.nilaiPenguji2 = getValueInt(0, 100);
-
-    std::cout << "Masukan Nilai Penguji 3: \ninput: ";
-    tersidang.nilaiPenguji3 = getValueInt(0, 100);
-
-    std::cout << "Masukan Waktu Mulai Sidang!\n";
-    tersidang.mulai = getValueWaktu(tersidang.mulai);
-
-    std::cout << "Masukan Waktu Selesai Sidang!\ninput: ";
-    tersidang.selesai = getValueWaktu(tersidang.mulai);
-
-    return tersidang;
 }
 
 float getNilaiAkhir (Mahasiswa tersidang) {
@@ -121,29 +123,35 @@ char getHurufMutu(Mahasiswa tersidang) {
     }
 }
 
-void getLamaSidang (Mahasiswa tersidang) {
-    if (tersidang.selesai.detik < tersidang.mulai.detik)
-    {
-        tersidang.selesai.detik += 60;
-        tersidang.selesai.menit--;
-    }
+Mahasiswa getValueMahasiswa(Mahasiswa tersidang) {
+    std::cout << "Masukan NPM: \ninput: ";
+    std::cin.ignore();
+    std::getline(std::cin, tersidang.npm);
 
-    tersidang.lama.detik = tersidang.selesai.detik - tersidang.mulai.detik;
+    std::cout << "Masukan Nama: \ninput: ";
+    std::getline(std::cin, tersidang.nama);
 
-    if (tersidang.selesai.menit < tersidang.mulai.menit)
-    {
-        tersidang.selesai.menit += 60;
-        tersidang.selesai.jam--;
-    }
+    std::cout << "Masukan Nilai Penguji 1: \ninput: ";
+    tersidang.nilaiPenguji1 = getValueInt(0, 100);
 
-    tersidang.lama.menit = tersidang.selesai.menit - tersidang.mulai.menit;
+    std::cout << "Masukan Nilai Penguji 2: \ninput: ";
+    tersidang.nilaiPenguji2 = getValueInt(0, 100);
 
-    if (tersidang.selesai.jam < tersidang.mulai.jam)
-    {
-        tersidang.selesai.jam += 24;
-    }
+    std::cout << "Masukan Nilai Penguji 3: \ninput: ";
+    tersidang.nilaiPenguji3 = getValueInt(0, 100);
 
-    tersidang.lama.jam = tersidang.selesai.jam - tersidang.mulai.jam;
+    std::cout << "Masukan Waktu Mulai Sidang!\n";
+    tersidang.mulai = getValueWaktu(tersidang.mulai);
+
+    std::cout << "Masukan Waktu Selesai Sidang!\ninput: ";
+    tersidang.selesai = getValueWaktu(tersidang.selesai);
+
+    tersidang.hurufMutu = getHurufMutu(tersidang);
+    tersidang.status = getStatusKelulusan(tersidang);
+    tersidang.lama = getLamaSidang(tersidang);
+    tersidang.nilaiAkhir = getNilaiAkhir(tersidang);
+
+    return tersidang;
 }
 
 int getHighest(const Mahasiswa arr[], const int size) {
@@ -236,8 +244,14 @@ void selectionSortNilaiDescending(Mahasiswa arr[], const int size) {
     }
 }
 
-void printWaktu(Waktu jam) {
-    std::cout <<  std::setw(LONG_WIDTH) << std::setfill('0') << std::setw(2) << jam.jam <<  ":" << std::setw(2) << jam.menit << ":" << std::setw(2) << jam.detik << ":";  
+std::string printWaktu(Waktu jam) {
+    std::ostringstream temp;
+
+    temp << std::setfill('0') << std::setw(2) << jam.jam <<  ":" << std::setw(2) << jam.menit << ":" << std::setw(2) << jam.detik << std::setfill(' ');  
+
+    std::string result = temp.str();
+
+    return result;
 }
 
 void printOutput(Mahasiswa arr[], int size) {
@@ -252,26 +266,25 @@ void printOutput(Mahasiswa arr[], int size) {
     << std::setw(LONG_WIDTH) << "Nilai Akhir" << std::setw(LONG_WIDTH) << "Huruf Mutu" << std::setw(LONG_WIDTH) << "Mulai"
     << std::setw(LONG_WIDTH) << "Selesai" << std::setw(LONG_WIDTH) << "Lama" << std::setw(MEDIUM_WIDTH) << "Status"   
     << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') << "\n";
-
     //bagian isi
     for (size_t i = 0; i < size; i++)
     {
+        std::string mulai = printWaktu(arr[i].mulai);
+        std::string selesai = printWaktu(arr[i].selesai);
+        std::string lama = printWaktu(arr[i].lama);
+
         std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 << std::setw(MEDIUM_WIDTH) << arr[i].npm << std::setw(LONG_WIDTH) << arr[i].nama 
         << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
-        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]); printWaktu(arr[i].mulai);
-        printWaktu(arr[i].selesai); printWaktu(arr[i].lama); std::cout << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]);
+        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]) << std::setw(LONG_WIDTH) << mulai 
+        << std::setw(LONG_WIDTH) << selesai << std::setw(LONG_WIDTH) << lama << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]);
     }
-    
-    // //bagian jumlah total
-    // std::cout << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n"
-    // << std::left << std::setw(55) << "JUMLAH TOTAL:" << getSumJumlah(arr, size)
-    // << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ');
 
-    // //bagian catatan
-    // std::cout << "\n" << "nilaiAkhir TERTINGGI: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
-    // << "nilaiAkhir TERENDAH: " << std::setw(MEDIUM_WIDTH) << getLowest(arr, size) << "\n"
-    // << "RATA-RATA nilaiAkhir: " << std::setw(MEDIUM_WIDTH) << getMeanPrice(arr, size)
-    // << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
+    //bagian catatan
+    std::cout << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') 
+    << "\n" << "Nilai Akhir Tertinggi: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
+    << "Nilai Akhir Terendah: " << std::setw(MEDIUM_WIDTH) << getLowest(arr, size) << "\n"
+    << "Nilai Akhir Rata-Rata: " << std::setw(MEDIUM_WIDTH) << getMeanScore(arr, size)
+    << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') << "\n";
 }
 
 int main() {
