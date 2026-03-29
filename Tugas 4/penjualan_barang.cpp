@@ -160,6 +160,25 @@ void printOutput(Barang arr[], int size) {
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 }
 
+int getValueInt(int min = INT_MIN, int max = INT_MAX) {
+    int input;
+
+    while (true)
+    {
+        std::cin >> input;
+    
+        if (std::cin.fail() || input < min || input > max)
+        {
+            std::cout << "input tidak valid! silakan coba lagi\ninput: ";
+            std::cin.clear();
+            std::cin.ignore(INT_MAX, '\n');
+            continue;
+        }
+
+        return input;
+    }
+}
+
 int main() {
     std::cout << "Selamat datang di Program Pengelola Penjualan Barang!\n\n";
     Barang foo[5] = {{1, "Buku", 1000, 10}, {3, "Tas", 10000, 20}, {13, "Penghapus", 2500, 15}, {103, "Cover Buku", 9000, 12}, {21, "Pulpen", 3000, 23}};
@@ -178,7 +197,7 @@ int main() {
         << "0. Keluar\n\n";
 
         std::cout << "input: ";
-        std::cin >> input;
+        input = getValueInt(0, 4);
 
         switch (input)
         {
@@ -199,7 +218,7 @@ int main() {
             << "(masukan kode dalam bentuk integer, 013 -> 13)\n" 
             << "input : ";
 
-            std::cin >> key;
+            key = getValueInt();
             std::cout << "\n"; 
 
             index = linearSearch(foo, size, key);
