@@ -276,7 +276,7 @@ void printOutput(Mahasiswa arr[], int size) {
         std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 << std::setw(MEDIUM_WIDTH) << arr[i].npm << std::setw(LONG_WIDTH) << arr[i].nama 
         << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
         << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]) << std::setw(LONG_WIDTH) << mulai 
-        << std::setw(LONG_WIDTH) << selesai << std::setw(LONG_WIDTH) << lama << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]);
+        << std::setw(LONG_WIDTH) << selesai << std::setw(LONG_WIDTH) << lama << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]) << "\n";
     }
 
     //bagian catatan
@@ -318,7 +318,7 @@ int main() {
         << "0. Keluar\n\n";
 
         std::cout << "input: ";
-        input = getValueInt(0, 1);
+        input = getValueInt(0, 4);
 
         switch (input)
         {
@@ -329,7 +329,41 @@ int main() {
         case 1 :
             printOutput(foo, size);
             break;
+        case 2 :
+        {
+            std::string key = "";
+            int index = -1;
+
+            std::cout << "Masukan NPM mahasiswa yang ingin dicari!\n" 
+            << "(masukan kode dalam bentuk integer, eg. 13)\n" 
+            << "input : ";
+
+            std::cin.ignore();
+            getline(std::cin, key);
+            std::cout << "\n"; 
+
+            index = linearSearch(foo, size, key);
+            
+            if (index != -1) {
+                std::cout << "Mahasiswa ditemukan di baris ke-" << index+1 << " di dalam tabel di bawah ini:\n";
+                printOutput(foo, size);
+            } else {
+                std::cout << "Mahasiswa tidak ditemukan dalam tabel di bawah ini:\n";
+                printOutput(foo, size);
+            }
         }
+            break;
+        case 3 :
+            bubbleSortNilaiAscending(foo, size);
+            printOutput(foo,size);
+            break;
+
+        case 4 :
+            selectionSortNilaiDescending(foo, size);
+            printOutput(foo,size);
+            break;
+        }
+        
     } while (input != 0);
     
 
