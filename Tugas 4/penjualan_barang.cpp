@@ -64,12 +64,11 @@ float getMeanPrice(const Barang arr[], const int size) {
 int linearSearch(const Barang arr[], const int size, const int key) {
     int i = 0;
 
-    while (i < size && arr[i].kodeBrg != key)
+    while (i < size)
     {
+        if (arr[i].kodeBrg == key) return i;
         i++;
     }
-
-    if (i == key) return i;
 
     return -1;
 }
@@ -82,6 +81,25 @@ void bubbleSortByKodeAscending(Barang arr[], const int size) {
         for (size_t j = 0; j < size-i-1; j++)
         {
             if (arr[j].kodeBrg > arr[j+1].kodeBrg)
+            {
+                Barang temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+            swapped = true;
+        }
+        if (swapped == false) break;
+    }
+}
+
+void bubbleSortByKodeDescending(Barang arr[], const int size) {
+    bool swapped = false;
+
+    for (size_t i = 0; i < size-1; i++)
+    {
+        for (size_t j = 0; j < size-i-1; j++)
+        {
+            if (arr[j].kodeBrg < arr[j+1].kodeBrg)
             {
                 Barang temp = arr[j];
                 arr[j] = arr[j+1];
@@ -109,6 +127,8 @@ int getSumJumlah(Barang arr[], int size) {
 }
 
 void printOutput(Barang arr[], int size) {
+    std::cout << std::right << std::setfill(' '); // reset to normal state for concistency
+
     std::cout << "\n" << std::setw(50) << "Daftar Barang PT Informatika\n";
 
     // bagian atas
@@ -134,16 +154,80 @@ void printOutput(Barang arr[], int size) {
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ');
 
     //bagian catatan
-    std::cout << "\n" << "HARGA TERTINGGI: " << getHighest(arr, size) << "\n"
-    << "HARGA TERENDAH: " << getHighest(arr, size) << "\n"
-    << "RATA-RATA HARGA: " << getHighest(arr, size)
+    std::cout << "\n" << "HARGA TERTINGGI: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
+    << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
+    << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size)
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 }
 
 int main() {
-    Barang foo[2] = {{1, "Buku", 1000, 10}, {3, "Tas", 10000, 20}};
+    std::cout << "Selamat datang di Program Pengelola Penjualan Barang!\n\n";
+    Barang foo[5] = {{1, "Buku", 1000, 10}, {3, "Tas", 10000, 20}, {13, "Penghapus", 2500, 15}, {103, "Cover Buku", 9000, 12}, {21, "Pulpen", 3000, 23}};
+    int size = 2;
+    int input = -1;
 
-    printOutput(foo, 2);
+    do
+    {
+        size = sizeof(foo)/sizeof(foo[0]); //update size
+
+        std::cout << "Pilih aksi yang ingin dilakukan:\n"
+        << "1. Lihat Tabel\n"
+        << "2. Cari Barang berdasarkan Kode\n"
+        << "3. Sortir secara Naik\n"
+        << "4. Sortir secara Turun\n"
+        << "0. Keluar\n\n";
+
+        std::cout << "input: ";
+        std::cin >> input;
+
+        switch (input)
+        {
+        case 0:
+            std::cout << "\n\nTerima kasih sudah menggunakan program ini!"; 
+            break;
+
+        case 1 :
+            printOutput(foo, size);
+            break;
+
+        case 2 :
+        {
+            int key = -1; // -1 itu placeholder
+            int index = -1;
+
+            std::cout << "Masukan kode barang yang ingin dicari!\n" 
+            << "(masukan kode dalam bentuk integer, 013 -> 13)\n" 
+            << "input : ";
+
+            std::cin >> key;
+            std::cout << "\n"; 
+
+            index = linearSearch(foo, size, key);
+            
+            if (index != -1) {
+                std::cout << "Barang ditemukan di baris ke-" << index+1 << " di dalam tabel di bawah ini:\n";
+                printOutput(foo, size);
+            } else {
+                std::cout << "Barang tidak ditemukan dalam tabel di bawah ini:\n";
+                printOutput(foo, size);
+            }
+
+            break;
+        }
+        case 3:
+            bubbleSortByKodeAscending(foo, size);
+            printOutput(foo, size);
+            break;
+
+        case 4:
+            bubbleSortByKodeDescending(foo, size);
+            printOutput(foo, size);
+            break;
+        default:
+            break;
+        }
+    } while (input != 0);
+    
 
     return 0;
 }
