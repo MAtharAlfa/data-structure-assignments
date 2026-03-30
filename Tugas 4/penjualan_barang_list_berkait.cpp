@@ -1,5 +1,5 @@
 /*
-Nama Program : Pengelola Penjualan Barang
+Nama Program : Pengelola Penjualan Barang Linked List
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 29/03/2026

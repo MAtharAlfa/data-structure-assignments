@@ -35,6 +35,8 @@ struct Mahasiswa {
    std::string status;
 };
 
+typedef Mahasiswa listSidang[100];
+
 Waktu getLamaSidang (Mahasiswa tersidang) {
     if (tersidang.selesai.detik < tersidang.mulai.detik)
     {
@@ -261,10 +263,17 @@ void printOutput(Mahasiswa arr[], int size) {
 
     // bagian atas
     std::cout << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') //175 total width dari setw
-    << std::left << std::setw(SHORT_WIDTH) << "No" << std::setw(MEDIUM_WIDTH) << "NPM" << std::setw(LONG_WIDTH) << "Nama Mahasiswa" 
-    << std::setw(MEDIUM_WIDTH) << "Nilai 1" << std::setw(MEDIUM_WIDTH) << "Nilai 2" << std::setw(MEDIUM_WIDTH) << "Nilai 3"
-    << std::setw(LONG_WIDTH) << "Nilai Akhir" << std::setw(LONG_WIDTH) << "Huruf Mutu" << std::setw(LONG_WIDTH) << "Mulai"
-    << std::setw(LONG_WIDTH) << "Selesai" << std::setw(LONG_WIDTH) << "Lama" << std::setw(MEDIUM_WIDTH) << "Status"   
+    << std::left << std::setw(SHORT_WIDTH) << "No" 
+    << std::setw(MEDIUM_WIDTH) << "NPM" 
+    << std::setw(LONG_WIDTH) << "Nama Mahasiswa" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 1" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 2" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 3"
+    << std::setw(LONG_WIDTH) << "Nilai Akhir" 
+    << std::setw(LONG_WIDTH) << "Huruf Mutu" 
+    << std::setw(LONG_WIDTH) << "Mulai"
+    << std::setw(LONG_WIDTH) << "Selesai" 
+    << std::setw(LONG_WIDTH) << "Lama" << std::setw(MEDIUM_WIDTH) << "Status"   
     << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') << "\n";
     //bagian isi
     for (size_t i = 0; i < size; i++)
@@ -273,10 +282,18 @@ void printOutput(Mahasiswa arr[], int size) {
         std::string selesai = printWaktu(arr[i].selesai);
         std::string lama = printWaktu(arr[i].lama);
 
-        std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 << std::setw(MEDIUM_WIDTH) << arr[i].npm << std::setw(LONG_WIDTH) << arr[i].nama 
-        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
-        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]) << std::setw(LONG_WIDTH) << mulai 
-        << std::setw(LONG_WIDTH) << selesai << std::setw(LONG_WIDTH) << lama << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]) << "\n";
+        std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 
+        << std::setw(MEDIUM_WIDTH) << arr[i].npm 
+        << std::setw(LONG_WIDTH) << arr[i].nama 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
+        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) 
+        << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]) 
+        << std::setw(LONG_WIDTH) << mulai 
+        << std::setw(LONG_WIDTH) << selesai 
+        << std::setw(LONG_WIDTH) << lama 
+        << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]) << "\n";
     }
 
     //bagian catatan
