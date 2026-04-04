@@ -27,22 +27,29 @@ struct Mahasiswa {
    int nilaiPenguji1; 
    int nilaiPenguji2; 
    int nilaiPenguji3;
-   float nilaiAkhir;
-   char hurufMutu;
    Waktu  mulai;             
    Waktu  selesai;
-   Waktu lama;
-   std::string status;
 };
 
+template <typename T>
+void swap(T& swap1, T& swap2) {
+    T temp = swap1;
+    swap1 = swap2;
+    swap2 = temp;
+}
+
+typedef Mahasiswa listSidang[100];
+
 Waktu getLamaSidang (Mahasiswa tersidang) {
+    Waktu lamaSidang;
+
     if (tersidang.selesai.detik < tersidang.mulai.detik)
     {
         tersidang.selesai.detik += 60;
         tersidang.selesai.menit--;
     }
 
-    tersidang.lama.detik = tersidang.selesai.detik - tersidang.mulai.detik;
+    lamaSidang.detik = tersidang.selesai.detik - tersidang.mulai.detik;
 
     if (tersidang.selesai.menit < tersidang.mulai.menit)
     {
@@ -50,16 +57,16 @@ Waktu getLamaSidang (Mahasiswa tersidang) {
         tersidang.selesai.jam--;
     }
 
-    tersidang.lama.menit = tersidang.selesai.menit - tersidang.mulai.menit;
+    lamaSidang.menit = tersidang.selesai.menit - tersidang.mulai.menit;
 
     if (tersidang.selesai.jam < tersidang.mulai.jam)
     {
         tersidang.selesai.jam += 24;
     }
 
-    tersidang.lama.jam = tersidang.selesai.jam - tersidang.mulai.jam;
+    lamaSidang.jam = tersidang.selesai.jam - tersidang.mulai.jam;
 
-    return tersidang.lama;
+    return lamaSidang;
 }
 
 int getValueInt(int min = INT_MIN, int max = INT_MAX) {
@@ -98,23 +105,23 @@ float getNilaiAkhir (Mahasiswa tersidang) {
     return (float)(tersidang.nilaiPenguji1+tersidang.nilaiPenguji2+tersidang.nilaiPenguji3)/3;
 }
 
-std::string getStatusKelulusan (Mahasiswa tersidang) {
-    if (tersidang.nilaiAkhir >= 68) return "Lulus";
+std::string getStatusKelulusan (int nilaiAkhir) {
+    if (nilaiAkhir >= 68) return "Lulus";
     
     return "Gagal";
 }
 
-char getHurufMutu(Mahasiswa tersidang) {
-    if (tersidang.nilaiAkhir >= 0 && tersidang.nilaiAkhir < 55)
+char getHurufMutu(int nilaiAkhir) {
+    if (nilaiAkhir >= 0 && nilaiAkhir < 55)
     {
         return 'D';
-    } else if (tersidang.nilaiAkhir >=55 && tersidang.nilaiAkhir < 68)
+    } else if (nilaiAkhir >=55 && nilaiAkhir < 68)
     {
         return 'C';
-    } else if (tersidang.nilaiAkhir >=68 && tersidang.nilaiAkhir < 80) 
+    } else if (nilaiAkhir >=68 && nilaiAkhir < 80) 
     {
         return 'B';
-    } else if (tersidang.nilaiAkhir >=80 && tersidang.nilaiAkhir <= 100) 
+    } else if (nilaiAkhir >=80 && nilaiAkhir <= 100) 
     {
         return 'A';
     } else 
@@ -146,11 +153,6 @@ Mahasiswa getValueMahasiswa(Mahasiswa tersidang) {
     std::cout << "Masukan Waktu Selesai Sidang!\ninput: ";
     tersidang.selesai = getValueWaktu(tersidang.selesai);
 
-    tersidang.hurufMutu = getHurufMutu(tersidang);
-    tersidang.status = getStatusKelulusan(tersidang);
-    tersidang.lama = getLamaSidang(tersidang);
-    tersidang.nilaiAkhir = getNilaiAkhir(tersidang);
-
     return tersidang;
 }
 
@@ -159,9 +161,10 @@ int getHighest(const Mahasiswa arr[], const int size) {
 
     for (size_t i = 0; i < size; i++)
     {
-        if (arr[i].nilaiAkhir > highest)
+        int tempNilaiAkhir = getNilaiAkhir(arr[i]);
+        if (tempNilaiAkhir > highest)
         {
-            highest = arr[i].nilaiAkhir;
+            highest = tempNilaiAkhir;
         }
     }
     
@@ -173,9 +176,10 @@ int getLowest(const Mahasiswa arr[], const int size) {
 
     for (size_t i = 0; i < size; i++)
     {
-        if (arr[i].nilaiAkhir < lowest)
+        int tempNilaiAkhir = getNilaiAkhir(arr[i]);
+        if (tempNilaiAkhir < lowest)
         {
-            lowest = arr[i].nilaiAkhir;
+            lowest = tempNilaiAkhir;
         }
     }
     
@@ -187,7 +191,9 @@ float getMeanScore(const Mahasiswa arr[], const int size) {
 
     for (size_t i = 0; i < size; i++)
     {
-        sum += arr[i].nilaiAkhir;
+        int tempNilaiAkhir = getNilaiAkhir(arr[i]);
+
+        sum += tempNilaiAkhir;
     }
     
     return ((float)sum/size);
@@ -212,11 +218,9 @@ void bubbleSortNilaiAscending(Mahasiswa arr[], const int size) {
     {
         for (size_t j = 0; j < size-i-1; j++)
         {
-            if (arr[j].nilaiAkhir > arr[j+1].nilaiAkhir)
+            if (std::stoi(arr[j].npm) > std::stoi(arr[j+1].npm))
             {
-                Mahasiswa temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
+                swap<Mahasiswa>(arr[j], arr[j+1]);
             }
             swapped = true;
         }
@@ -227,19 +231,17 @@ void bubbleSortNilaiAscending(Mahasiswa arr[], const int size) {
 void selectionSortNilaiDescending(Mahasiswa arr[], const int size) {
     for (size_t i = 0; i < size-1; i++)
     {
-        int highestIndex = 0;
+        int highestIndex = i;
         for (size_t j = i+1; j < size; j++)
         {
-            if (arr[j].nilaiAkhir > arr[highestIndex].nilaiAkhir)
+            if (std::stoi(arr[j].npm) > std::stoi(arr[highestIndex].npm))
             {
                 highestIndex = j;
             }
         }
         if (highestIndex != i)
         {
-            Mahasiswa temp = arr[i];
-            arr[i] = arr[highestIndex];
-            arr[highestIndex] = temp;
+            swap<Mahasiswa>(arr[i], arr[highestIndex]);
         }
     }
 }
@@ -261,22 +263,39 @@ void printOutput(Mahasiswa arr[], int size) {
 
     // bagian atas
     std::cout << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') //175 total width dari setw
-    << std::left << std::setw(SHORT_WIDTH) << "No" << std::setw(MEDIUM_WIDTH) << "NPM" << std::setw(LONG_WIDTH) << "Nama Mahasiswa" 
-    << std::setw(MEDIUM_WIDTH) << "Nilai 1" << std::setw(MEDIUM_WIDTH) << "Nilai 2" << std::setw(MEDIUM_WIDTH) << "Nilai 3"
-    << std::setw(LONG_WIDTH) << "Nilai Akhir" << std::setw(LONG_WIDTH) << "Huruf Mutu" << std::setw(LONG_WIDTH) << "Mulai"
-    << std::setw(LONG_WIDTH) << "Selesai" << std::setw(LONG_WIDTH) << "Lama" << std::setw(MEDIUM_WIDTH) << "Status"   
+    << std::left << std::setw(SHORT_WIDTH) << "No" 
+    << std::setw(MEDIUM_WIDTH) << "NPM" 
+    << std::setw(LONG_WIDTH) << "Nama Mahasiswa" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 1" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 2" 
+    << std::setw(MEDIUM_WIDTH) << "Nilai 3"
+    << std::setw(LONG_WIDTH) << "Nilai Akhir" 
+    << std::setw(LONG_WIDTH) << "Huruf Mutu" 
+    << std::setw(LONG_WIDTH) << "Mulai"
+    << std::setw(LONG_WIDTH) << "Selesai" 
+    << std::setw(LONG_WIDTH) << "Lama" << std::setw(MEDIUM_WIDTH) << "Status"   
     << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') << "\n";
     //bagian isi
     for (size_t i = 0; i < size; i++)
     {
-        std::string mulai = printWaktu(arr[i].mulai);
-        std::string selesai = printWaktu(arr[i].selesai);
-        std::string lama = printWaktu(arr[i].lama);
+        Waktu lama = getLamaSidang(arr[i]);
 
-        std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 << std::setw(MEDIUM_WIDTH) << arr[i].npm << std::setw(LONG_WIDTH) << arr[i].nama 
-        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
-        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) << std::setw(LONG_WIDTH) << getHurufMutu(arr[i]) << std::setw(LONG_WIDTH) << mulai 
-        << std::setw(LONG_WIDTH) << selesai << std::setw(LONG_WIDTH) << lama << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(arr[i]) << "\n";
+        std::string strMulai = printWaktu(arr[i].mulai);
+        std::string strSelesai = printWaktu(arr[i].selesai);
+        std::string strLama = printWaktu(lama);
+
+        std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 
+        << std::setw(MEDIUM_WIDTH) << arr[i].npm 
+        << std::setw(LONG_WIDTH) << arr[i].nama 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji1 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji2 
+        << std::setw(MEDIUM_WIDTH) << arr[i].nilaiPenguji3
+        << std::setw(LONG_WIDTH) << getNilaiAkhir(arr[i]) 
+        << std::setw(LONG_WIDTH) << getHurufMutu(getNilaiAkhir(arr[i])) 
+        << std::setw(LONG_WIDTH) << strMulai 
+        << std::setw(LONG_WIDTH) << strSelesai 
+        << std::setw(LONG_WIDTH) << strLama 
+        << std::setw(MEDIUM_WIDTH) << getStatusKelulusan(getNilaiAkhir(arr[i])) << "\n";
     }
 
     //bagian catatan
@@ -287,13 +306,35 @@ void printOutput(Mahasiswa arr[], int size) {
     << std::setfill('-') << std::setw(175) << " \n" << std::setfill(' ') << "\n";
 }
 
+void printFindNPM (listSidang arr, int size) {
+    std::string key = "";
+    int index = -1;
+
+    std::cout << "Masukan NPM mahasiswa yang ingin dicari!\n" 
+    << "(masukan kode dalam bentuk integer, eg. 13)\n" 
+    << "input : ";
+
+    std::cin.ignore();
+    getline(std::cin, key);
+    std::cout << "\n"; 
+
+    index = linearSearch(arr, size, key);
+            
+    if (index != -1) {
+    std::cout << "Mahasiswa ditemukan di baris ke-" << index+1 << " di dalam tabel di bawah ini:\n";
+        printOutput(arr, size);
+    } else {
+        std::cout << "Mahasiswa tidak ditemukan dalam tabel\n\n";
+    }
+}
+
 int main() {
     std::cout << "Selamat datang di Program Pengelola Status Sidang Mahasiswa!\n\n";
     int size = 0;
     
     std::cout << "Masukan total data yang ingin dimasukan!\ninput: ";
     size = getValueInt(0);
-    Mahasiswa foo[size];
+    listSidang foo;
 
     for (size_t i = 0; i < size; i++)
     {
@@ -308,7 +349,7 @@ int main() {
 
     do
     {
-        size = sizeof(foo)/sizeof(foo[0]); //update size
+        bubbleSortNilaiAscending(foo, size); //set list ascending
 
         std::cout << "Pilih aksi yang ingin dilakukan:\n"
         << "1. Lihat Tabel\n"
@@ -330,28 +371,7 @@ int main() {
             printOutput(foo, size);
             break;
         case 2 :
-        {
-            std::string key = "";
-            int index = -1;
-
-            std::cout << "Masukan NPM mahasiswa yang ingin dicari!\n" 
-            << "(masukan kode dalam bentuk integer, eg. 13)\n" 
-            << "input : ";
-
-            std::cin.ignore();
-            getline(std::cin, key);
-            std::cout << "\n"; 
-
-            index = linearSearch(foo, size, key);
-            
-            if (index != -1) {
-                std::cout << "Mahasiswa ditemukan di baris ke-" << index+1 << " di dalam tabel di bawah ini:\n";
-                printOutput(foo, size);
-            } else {
-                std::cout << "Mahasiswa tidak ditemukan dalam tabel di bawah ini:\n";
-                printOutput(foo, size);
-            }
-        }
+            printFindNPM(foo, size);
             break;
         case 3 :
             bubbleSortNilaiAscending(foo, size);

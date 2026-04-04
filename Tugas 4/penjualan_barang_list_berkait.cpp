@@ -1,5 +1,5 @@
 /*
-Nama Program : Pengelola Penjualan Barang
+Nama Program : Pengelola Penjualan Barang Linked List
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 29/03/2026
@@ -20,10 +20,15 @@ struct Barang {
     std::string namaBrg;
     int harga;
     int banyak;
-    Barang* next;
 };
 
-typedef Barang* PtrToBarang;
+struct NodeBarang {
+    Barang barang;
+    NodeBarang* next;
+};
+
+
+typedef NodeBarang* PtrToBarang;
 typedef PtrToBarang List;
 
 int getValueInt(int min = INT_MIN, int max = INT_MAX) {
@@ -52,15 +57,20 @@ void createList(List& first) {
 }
 
 void createElement(PtrToBarang& pBaru) {
-    pBaru = new Barang;
+    pBaru = new NodeBarang;
+
     std::cout << "Masukan kode barang\ninput: ";
-    pBaru->kodeBrg = getValueInt(0, 999);
+    pBaru->barang.kodeBrg = getValueInt(0, 999);
+
     std::cout << "Masukan nama barang\ninput: ";
-    std:: cin >> pBaru->namaBrg;
+    std::cin >> pBaru->barang.namaBrg;
+
     std::cout << "Masukan harga barang\ninput: ";
-    std:: cin >> pBaru->harga;
+    std::cin >> pBaru->barang.harga;
+
     std::cout << "Masukan jumlah barang\ninput: ";
-    std:: cin >> pBaru->banyak;
+    std::cin >> pBaru->barang.banyak;
+
     pBaru->next = nullptr;
 }
 
@@ -93,11 +103,11 @@ void traversalPrintList(List& first) {
         do
         {
             std::cout << std::left << std::setw(SHORT_WIDTH) << baris 
-            << std::right << std::setfill('0') << std::setw(3) << pBantu->kodeBrg << std::left << std::setfill(' ') << std::setw(7) << " " //setw 7+3  == setw MEDIUM 
-            << std::setw(LONG_WIDTH) << pBantu->namaBrg 
-            << std::setw(MEDIUM_WIDTH) << pBantu->harga 
-            << std::setw(MEDIUM_WIDTH) << pBantu->banyak 
-            << std::setw(LONG_WIDTH) << pBantu->harga*pBantu->banyak << "\n";
+            << std::right << std::setfill('0') << std::setw(3) << pBantu->barang.kodeBrg << std::left << std::setfill(' ') << std::setw(7) << " " //setw 7+3  == setw MEDIUM 
+            << std::setw(LONG_WIDTH) << pBantu->barang.namaBrg 
+            << std::setw(MEDIUM_WIDTH) << pBantu->barang.harga 
+            << std::setw(MEDIUM_WIDTH) << pBantu->barang.banyak 
+            << std::setw(LONG_WIDTH) << pBantu->barang.harga*pBantu->barang.banyak << "\n";
             pBantu = pBantu->next;
 
             baris++;
@@ -145,9 +155,9 @@ int getHighestList(List& first) {
         pBantu = first;
         do
         {
-            if (pBantu->harga > highest)
+            if (pBantu->barang.harga > highest)
             {
-                highest = pBantu->harga;
+                highest = pBantu->barang.harga;
             }
             
             pBantu = pBantu->next;
@@ -170,9 +180,9 @@ int getLowestList(List& first) {
         pBantu = first;
         do
         {
-            if (pBantu->harga < lowest)
+            if (pBantu->barang.harga < lowest)
             {
-                lowest = pBantu->harga;
+                lowest = pBantu->barang.harga;
             }
 
             pBantu = pBantu->next;
@@ -197,7 +207,7 @@ float getMeanPriceList(List& first) {
         pBantu = first;
         do
         {
-            sum += pBantu->harga;
+            sum += pBantu->barang.harga;
             totalList++;
 
             pBantu = pBantu->next;
@@ -219,7 +229,7 @@ int getSumJumlahList(List& first) {
         pBantu = first;
         do
         {
-            sum += (pBantu->banyak*pBantu->harga);
+            sum += (pBantu->barang.banyak*pBantu->barang.harga);
             pBantu = pBantu->next;
         } while (pBantu != nullptr);
     }

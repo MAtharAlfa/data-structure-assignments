@@ -22,69 +22,71 @@ struct Barang {
     int banyak;
 };
 
-int getHighest(const Barang arr[], const int size) {
+typedef Barang listBarang[100];
+
+int getHighest(const listBarang list, const int size) {
     int highest = INT_MIN;
 
     for (size_t i = 0; i < size; i++)
     {
-        if (arr[i].harga > highest)
+        if (list[i].harga > highest)
         {
-            highest = arr[i].harga;
+            highest = list[i].harga;
         }
     }
     
     return highest;
 }
 
-int getLowest(const Barang arr[], const int size) {
+int getLowest(const listBarang list, const int size) {
     int lowest = INT_MAX;
 
     for (size_t i = 0; i < size; i++)
     {
-        if (arr[i].harga < lowest)
+        if (list[i].harga < lowest)
         {
-            lowest = arr[i].harga;
+            lowest = list[i].harga;
         }
     }
     
     return lowest;
 }
 
-float getMeanPrice(const Barang arr[], const int size) {
+float getMeanPrice(const listBarang list, const int size) {
     int sum = 0;
 
     for (size_t i = 0; i < size; i++)
     {
-        sum += arr[i].harga;
+        sum += list[i].harga;
     }
     
     return ((float)sum/size);
 }
 
-int linearSearch(const Barang arr[], const int size, const int key) {
+int linearSearch(const listBarang list, const int size, const int key) {
     int i = 0;
 
     while (i < size)
     {
-        if (arr[i].kodeBrg == key) return i;
+        if (list[i].kodeBrg == key) return i;
         i++;
     }
 
     return -1;
 }
 
-void bubbleSortByKodeAscending(Barang arr[], const int size) {
+void bubbleSortByKodeAscending(listBarang list, const int size) {
     bool swapped = false;
 
     for (size_t i = 0; i < size-1; i++)
     {
         for (size_t j = 0; j < size-i-1; j++)
         {
-            if (arr[j].kodeBrg > arr[j+1].kodeBrg)
+            if (list[j].kodeBrg > list[j+1].kodeBrg)
             {
-                Barang temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
+                Barang temp = list[j];
+                list[j] = list[j+1];
+                list[j+1] = temp;
             }
             swapped = true;
         }
@@ -92,18 +94,18 @@ void bubbleSortByKodeAscending(Barang arr[], const int size) {
     }
 }
 
-void bubbleSortByKodeDescending(Barang arr[], const int size) {
+void bubbleSortByKodeDescending(listBarang list, const int size) {
     bool swapped = false;
 
     for (size_t i = 0; i < size-1; i++)
     {
         for (size_t j = 0; j < size-i-1; j++)
         {
-            if (arr[j].kodeBrg < arr[j+1].kodeBrg)
+            if (list[j].kodeBrg < list[j+1].kodeBrg)
             {
-                Barang temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
+                Barang temp = list[j];
+                list[j] = list[j+1];
+                list[j+1] = temp;
             }
             swapped = true;
         }
@@ -115,48 +117,52 @@ int getJumlah(Barang jumlah) {
     return jumlah.banyak*jumlah.harga;
 }
 
-int getSumJumlah(Barang arr[], int size) {
+int getSumJumlah(listBarang list, int size) {
     int sum = 0;
 
     for (size_t i = 0; i < size; i++)
     {
-        sum += getJumlah(arr[i]);
+        sum += getJumlah(list[i]);
     }
     
     return sum;
 }
 
-void printOutput(Barang arr[], int size) {
+void printOutput(listBarang list, int size) {
     std::cout << std::right << std::setfill(' '); // reset to normal state for concistency
 
     std::cout << "\n" << std::setw(50) << "Daftar Barang PT Informatika\n";
 
     // bagian atas
     std::cout << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') //75 total width dari setw
-    << std::left << std::setw(SHORT_WIDTH) << "NO" << std::setw(MEDIUM_WIDTH) << "KODE" << std::setw(LONG_WIDTH) << "NAMA BARANG" 
-    << std::setw(MEDIUM_WIDTH) << "HARGA" << std::setw(MEDIUM_WIDTH) << "BANYAK" << std::setw(LONG_WIDTH) << "JUMLAH"
+    << std::left << std::setw(SHORT_WIDTH) << "NO" 
+    << std::setw(MEDIUM_WIDTH) << "KODE" 
+    << std::setw(LONG_WIDTH) << "NAMA BARANG" 
+    << std::setw(MEDIUM_WIDTH) << "HARGA" 
+    << std::setw(MEDIUM_WIDTH) << "BANYAK" 
+    << std::setw(LONG_WIDTH) << "JUMLAH"
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 
     //bagian isi
     for (size_t i = 0; i < size; i++)
     {
         std::cout << std::left << std::setw(SHORT_WIDTH) << i+1 
-        << std::right << std::setfill('0') << std::setw(3) << arr[i].kodeBrg << std::left << std::setfill(' ') << std::setw(7) << " " //setw 7+3  == setw MEDIUM 
-        << std::setw(LONG_WIDTH) << arr[i].namaBrg 
-        << std::setw(MEDIUM_WIDTH) << arr[i].harga 
-        << std::setw(MEDIUM_WIDTH) << arr[i].banyak 
-        << std::setw(LONG_WIDTH) << getJumlah(arr[i]) << "\n";
+        << std::right << std::setfill('0') << std::setw(3) << list[i].kodeBrg << std::left << std::setfill(' ') << std::setw(7) << " " //setw 7+3  == setw MEDIUM 
+        << std::setw(LONG_WIDTH) << list[i].namaBrg 
+        << std::setw(MEDIUM_WIDTH) << list[i].harga 
+        << std::setw(MEDIUM_WIDTH) << list[i].banyak 
+        << std::setw(LONG_WIDTH) << getJumlah(list[i]) << "\n";
     }
     
     //bagian jumlah total
     std::cout << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n"
-    << std::left << std::setw(55) << "JUMLAH TOTAL:" << getSumJumlah(arr, size)
+    << std::left << std::setw(55) << "JUMLAH TOTAL:" << getSumJumlah(list, size)
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ');
 
     //bagian catatan
-    std::cout << "\n" << "HARGA TERTINGGI: " << std::setw(MEDIUM_WIDTH) << getHighest(arr, size) << "\n"
-    << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getLowest(arr, size) << "\n"
-    << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getMeanPrice(arr, size)
+    std::cout << "\n" << "HARGA TERTINGGI: " << std::setw(MEDIUM_WIDTH) << getHighest(list, size) << "\n"
+    << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getLowest(list, size) << "\n"
+    << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getMeanPrice(list, size)
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 }
 
