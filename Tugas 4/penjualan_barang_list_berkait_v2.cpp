@@ -2,9 +2,10 @@
 Nama Program : Pengelola Penjualan Barang Linked List
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
-Tanggal Buat : 29/03/2026
+Tanggal Buat : 05/03/2026
 Deskripsi    : Program akan mengelola data penjualan barang berikut ➔ Barang (kodeBrg, namaBrg, 
-               harga, banyak) namun program ini akan ditulis dengan menggunakan data struktur list berkait
+               harga, banyak) namun program ini akan ditulis dengan menggunakan 
+               struktur data list berkait
 */
 
 const int SHORT_WIDTH = 5;
@@ -282,7 +283,7 @@ int main() {
         << "0. Keluar\n\n";
 
         std::cout << "input: ";
-        input = getValueInt(0, 3);
+        input = getValueInt(0, 2);
 
         switch (input)
         {

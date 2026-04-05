@@ -2,7 +2,7 @@
 Nama Program : Pengelola Status Sidang
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
-Tanggal Buat : 29/03/2026
+Tanggal Buat : 05/03/2026
 Deskripsi    : Program akan mengelola data sidang untuk menentukan nilai dan status kelulusan dari mahasiswa. 
 */
 
