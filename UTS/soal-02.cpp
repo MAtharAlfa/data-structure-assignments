@@ -49,8 +49,6 @@ void push(List& top, Pointer pNew) {
 
 Pointer pop(List& top) 
 {
-    if(peek(top) == 'U' || peek(top) == 'E' ||peek(top) == 'A') std::cout << peek(top);
-
     if (isEmpty(top))
     {
         std::cerr << "stack kosong";
@@ -59,12 +57,14 @@ Pointer pop(List& top)
     {
         Pointer pDel = top;
         top = nullptr;
+        pDel->next = nullptr;
 
         return pDel;
     } else 
     {
         Pointer pDel = top;
         top = top->next;
+        pDel->next = nullptr;
 
         return pDel;
     }
@@ -86,35 +86,36 @@ void traversal(List top) {
 }
 
 int main() {
-    List stack, printStack;
+    List stack, store;
     Pointer pNew;
 
     std::string value = "LUCENTRA";
 
     createStack(stack);
+    createStack(store);
 
     for (int i = 0; i < value.size(); i++)
     {
         createElement(pNew, value.at(i));
         push(stack, pNew);
     }
-    // traversal(stack);
+    traversal(stack); std::cout << "\n";
 
 
-    Pointer pTemp = nullptr;
-    pTemp = pop(stack);
-    push(printStack, pTemp);
 
-    pop(stack);
-    pop(stack);
-    pop(stack);
-    pop(stack);
+    for (size_t i = 0; i < value.length(); i++)
+    {
+        Pointer pStore = pop(stack);
 
-    pop(stack);
-    pop(stack);
+        if (pStore->member == 'U' || pStore->member == 'A' || pStore->member == 'E')
+        {
+            push(store, pStore);
 
+            std::cout << "\n";
+        }
+    }
 
-    // traversal(printStack);
+    traversal(store);
 
     return 0;
 }

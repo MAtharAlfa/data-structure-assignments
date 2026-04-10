@@ -70,11 +70,25 @@ void traversal(List tail) {
         return;
     }
 
+    int count = 1;
+
     Pointer head = tail->next, pTraverse = head;
     do {
-        std::cout << pTraverse->member << "\n";
+        std::cout << count << ". " << pTraverse->member << "\n";
         pTraverse = pTraverse->next;
+        count++;
     } while (pTraverse != head);
+}
+
+void printMenu(List lagu, Pointer current) {
+        std::cout << "=============================\n";
+        traversal(lagu);
+        std::cout << "=============================\n";
+        printCurrent(lagu, current);
+        std::cout << "=============================\n" <<
+        "1. Next Song\n" <<
+        "2. Previous Song\n" <<
+        "3. Exit\n";
 }
 
 int main() {
@@ -98,18 +112,14 @@ int main() {
     createElement(pNew, "Tabola Bale");
     insertFirst(lagu, pNew);
 
-    Pointer current = lagu;
+    Pointer current = lagu->next;
 
     int choice = -1;
     do
     {
-        std::cout << "=============================\n";
-        traversal(lagu);
-        std::cout << "=============================\n";
-        printCurrent(lagu, current);
-        std::cout << "=============================\n";
+        printMenu(lagu, current);
 
-        std::cout << "Input (1, 2, 0):";
+        std::cout << "Input (1, 2, 0): ";
         std::cin >> choice;
 
         switch (choice)
@@ -121,6 +131,7 @@ int main() {
             previous(current);
             break;
         default:
+            std:: cout << "Terima kasih sudah menggunakan";
             break;
         }
     } while (choice != 0);
