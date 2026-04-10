@@ -3,7 +3,7 @@
 
 struct Element
 {
-    std::string member;
+    char member;
     Element* next;
 };
 
@@ -11,7 +11,7 @@ typedef Element* Pointer; //first element
 
 typedef Pointer Stack; //head or top
 
-std::string peek(Stack top) {
+char peek(Stack top) {
     return top->member;
 }
 
@@ -34,13 +34,13 @@ void createElement(Pointer& newElement, char datum) {
     newElement->next = nullptr;
 }
 
-void push(Stack& top, Pointer neweElement) {
+void push(Stack& top, Pointer newElement) {
     if (isEmpty(top))
     {
-        top = neweElement;
+        top = newElement;
     } else {
-        neweElement->next = top;
-        top = neweElement;
+        newElement->next = top;
+        top = newElement;
     }
 }
 
@@ -90,7 +90,7 @@ int main(){
 
     for (size_t i = 0; i < kata.size(); i++)
     {
-        createElement(newElement, kata[i]);
+        createElement(newElement, kata.at(i));
         push(top, newElement);
     }
 
