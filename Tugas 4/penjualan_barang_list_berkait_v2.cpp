@@ -3,6 +3,7 @@ Nama Program : Pengelola Penjualan Barang Linked List
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 05/03/2026
+Tanggal Update
 Deskripsi    : Program akan mengelola data penjualan barang berikut ➔ Barang (kodeBrg, namaBrg, 
                harga, banyak) namun program ini akan ditulis dengan menggunakan 
                struktur data list berkait
