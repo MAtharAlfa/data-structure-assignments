@@ -65,13 +65,14 @@ void createElement(Pointer& pBaru) {
     pBaru->barang.kodeBrg = getValueInt(0, 999);
 
     std::cout << "Masukan nama barang\ninput: ";
-    std::cin >> pBaru->barang.namaBrg;
+    std::cin.ignore();
+    std::getline(std::cin, pBaru->barang.namaBrg);
 
     std::cout << "Masukan harga barang\ninput: ";
-    std::cin >> pBaru->barang.harga;
+    pBaru->barang.harga = getValueInt(0);
 
     std::cout << "Masukan jumlah barang\ninput: ";
-    std::cin >> pBaru->barang.banyak;
+    pBaru->barang.banyak = getValueInt(0);
 
     pBaru->next = nullptr;
 }
