@@ -206,7 +206,7 @@ Pointer deleteLast(List& first) {
     {
         Pointer pLast = first;
 
-        while (!pLast->next)
+        while (pLast->next != nullptr)
         {
             pLast = pLast->next;
         }
