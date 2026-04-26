@@ -5,7 +5,7 @@ NPM          : 140810250005
 Tanggal Buat : 26/04/2026
 Deskripsi    : Program akan mengelola data penjualan barang berikut ➔ Barang (kodeBrg, namaBrg, 
                harga, banyak) namun program ini akan ditulis dengan menggunakan 
-               struktur data circular linked list
+               struktur data doubly circular linked list
 */
 
 const int SHORT_WIDTH = 5;
@@ -338,13 +338,10 @@ Pointer deleteLast(List& first) {
     {
         pHapus = first;
         first = nullptr;
-        std::cout << "patapim\n\n";
 
         return pHapus;
     } else 
     {
-        std::cout << "patapim2\n\n";
-
         Pointer last = first->prev;
 
         last->prev->next = first;
