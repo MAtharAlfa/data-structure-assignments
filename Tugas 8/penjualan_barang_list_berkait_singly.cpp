@@ -543,6 +543,7 @@ int main() {
             if(!isFound(found)) continue;
 
             deleteAfter(brgToko, pCari , pNew);
+            delete pNew;
             break;
         }
         case 7:
@@ -558,6 +559,7 @@ int main() {
             if(!isFound(found)) continue;
 
             deleteBefore(brgToko, pCari , pNew);
+            delete pNew;
             break;
         }
         case 8:
@@ -573,13 +575,16 @@ int main() {
             if(!isFound(found)) continue;
 
             deleteCurrent(brgToko, pCari , pNew);
+            delete pNew;
             break;
         }
         case 9:
             deleteFirst(brgToko, pNew);
+            delete pNew;
             break;
         case 10:
             deleteLast(brgToko, pNew);
+            delete pNew;
             break;
         }
     } while (input != 0);
