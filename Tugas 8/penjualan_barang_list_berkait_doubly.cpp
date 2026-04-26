@@ -496,11 +496,11 @@ int main() {
         << "1. Lihat Tabel\n"
         << "2. Masukan barang dari atas barisan\n" // insert first
         << "3. Masukan barang dari bawah barisan\n" // insert last
-        << "4. Masukan barang setelah kode NPM\n" // insert after
-        << "5. Masukan barang sebelum kode NPM\n" // insert before
-        << "6. Hapus barang setelah kode NPM\n" // delete after
-        << "7. Hapus barang sebelum kode NPM\n" // delete before
-        << "8. Hapus barang pada kode NPM\n" // delete current
+        << "4. Masukan barang setelah kode barang\n" // insert after
+        << "5. Masukan barang sebelum kode barang\n" // insert before
+        << "6. Hapus barang setelah kode barang\n" // delete after
+        << "7. Hapus barang sebelum kode barang\n" // delete before
+        << "8. Hapus barang pada kode barang ke-n\n" // delete current
         << "9. Hapus barang paling atas\n" //delete first
         << "10. Hapus barang paling bawah\n" //delete last
         << "0. Keluar\n\n";
