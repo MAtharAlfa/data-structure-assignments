@@ -3,6 +3,7 @@ Nama Program : Pengelola Penjualan Barang Doubly Linked List
 Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 19/04/2026
+Last Updated : 26/04/2026 
 Deskripsi    : Program akan mengelola data penjualan barang berikut ➔ Barang (kodeBrg, namaBrg, 
                harga, banyak) namun program ini akan ditulis dengan menggunakan 
                struktur data doubly linked list
