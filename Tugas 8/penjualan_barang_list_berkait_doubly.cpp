@@ -54,6 +54,25 @@ int getValueInt(int min = INT_MIN, int max = INT_MAX) {
 }
 
 //linkedlist
+void createList(List& first);
+void createElement(Pointer& pBaru);
+void insertFirst(List& first, Pointer& pBaru);
+void traversalPrintList(const List first);
+void deleteFirst(List& first, Pointer& pHapus);
+void deleteLast(List& first, Pointer& pHapus);
+void linearSearch(List first, int key, int& found, Pointer& pSearch);
+bool isFound(int found);
+void insertAfter(List& first, Pointer& pSearch, Pointer& pNew);
+void deleteAfter(List& first, Pointer& pSearch, Pointer& pHapus);
+void deleteCurrent(List& first, Pointer& pSearch, Pointer& pHapus);
+int getSumJumlahList(const List first);
+float getMeanPriceList(const List first);
+int getLowestList(const List first);
+int getHighestList(const List first);
+void printOutputList(const List barang);
+void destroyList(List& first);
+
+
 
 void createList(List& first) {
     first = nullptr;
@@ -131,36 +150,6 @@ void traversalForward(List first) {
 
             list++;
         } while (pBantu != nullptr);
-    }
-}
-
-void traversalBackward(List first) {
-    if (!first) 
-    {
-        std::cout << "list kosong" << std::endl;
-    } else
-    {
-        Pointer pBantu = first;
-        int list = 1;
-
-        while (pBantu->next != nullptr)
-        {
-            list++;
-            pBantu = pBantu->next;
-        }
-
-        do
-        {
-            std::cout << std::left << std::setw(SHORT_WIDTH) << list 
-            << std::right << std::setfill('0') << std::setw(3) << pBantu->barang.kodeBrg << std::left << std::setfill(' ') << std::setw(7) << " " //setw 7+3  == setw MEDIUM 
-            << std::setw(LONG_WIDTH) << pBantu->barang.namaBrg 
-            << std::setw(MEDIUM_WIDTH) << pBantu->barang.harga 
-            << std::setw(MEDIUM_WIDTH) << pBantu->barang.banyak 
-            << std::setw(LONG_WIDTH) << pBantu->barang.harga*pBantu->barang.banyak << "\n";
-
-            list--;
-            pBantu = pBantu->prev;
-        } while (pBantu != nullptr);    
     }
 }
 
@@ -314,7 +303,7 @@ int getSumJumlah(List& first) {
     return sum;
 }
 
-void printOutputList(List barang, bool direction = 1) { // 0 for forward, 1 for backward
+void printOutputList(List barang) {
     std::cout << std::right << std::setfill(' '); // reset to normal state for concistency
 
     std::cout << "\n" << std::setw(50) << "Daftar Barang PT Informatika\n";
@@ -326,7 +315,7 @@ void printOutputList(List barang, bool direction = 1) { // 0 for forward, 1 for 
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 
     //bagian isi
-    (direction == 1) ? traversalForward(barang) : traversalBackward(barang); 
+    traversalForward(barang) 
     
     //bagian jumlah total
     std::cout << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n"
@@ -356,65 +345,141 @@ void printInterface() {
 int main() {
     std::cout << "Selamat datang di Program Pengelola Penjualan Barang!\n\n";
 
-    List barang = nullptr;
+    List brgToko;
+    createList(brgToko);
+
     Pointer pNew = nullptr;
 
-    createList(barang);
-
     int input = -1;
-    
+
     do
     {
-        printInterface();
 
-        input = getValueInt(0, 6);
+        std::cout << "Pilih aksi yang ingin dilakukan:\n"
+        << "1. Lihat Tabel\n"
+        << "2. Masukan barang dari atas barisan\n" // insert first
+        << "3. Masukan barang dari bawah barisan\n" // insert last
+        << "4. Masukan barang setelah kode NPM\n" // insert after
+        << "5. Masukan barang sebelum kode NPM\n" // insert before
+        << "6. Hapus barang setelah kode NPM\n" // delete after
+        << "7. Hapus barang sebelum kode NPM\n" // delete before
+        << "8. Hapus barang pada kode NPM\n" // delete current
+        << "9. Hapus barang paling atas\n" //delete first
+        << "10. Hapus barang paling bawah\n" //delete last
+        << "0. Keluar\n\n";
+
+        std::cout << "input: ";
+        input = getValueInt(0, 10);
 
         switch (input)
         {
-        default:
+        case 0:
             std::cout << "\n\nTerima kasih sudah menggunakan program ini!"; 
             break;
 
         case 1 :
-            if (!barang)
-            {
-                std::cout << "error: list kosong!\n\n";
-                break;
-            }
-            
-            printOutputList(barang, 1);
+            std::cout << "\n" << std::setw(50) << "Daftar Barang PT Informatika\n";
+            printOutputList(brgToko);
             break;
 
         case 2 :
-            if (!barang)
-            {
-                std::cout << "error: list kosong!\n\n";
-                break;
-            }
-            
-            printOutputList(barang, 0);
-            break;
-        case 3 :
             createElement(pNew);
-            insertFirst(barang, pNew);
+            insertFirst(brgToko, pNew);
             break;
-        case 4 :
+        case 3:
             createElement(pNew);
-            insertLast(barang, pNew);
+            insertLast(brgToko, pNew);
             break;
-        case 5 :
-            pNew = deleteFirst(barang);
-            delete pNew;
-            pNew = nullptr;
+        case 4:
+        {
+            int key;
+            int found;
+            Pointer pCari = nullptr;
+
+            std::cout << "\nMasukan Kode Barang:\n";
+            key = getValueInt();
+            linearSearch(brgToko, key, found, pCari);
+
+            if(!isFound(found)) continue;
+
+            createElement(pNew);
+            insertAfter(brgToko, pCari , pNew);
             break;
-        case 6 :
-            pNew = deleteLast(barang);
+        }
+        case 5:
+        {
+            int key;
+            int found;
+            Pointer pCari = nullptr;
+
+            std::cout << "\nMasukan Kode Barang:\n";
+            key = getValueInt();
+            linearSearch(brgToko, key, found, pCari);
+
+            if(!isFound(found)) continue;
+
+            createElement(pNew);
+            insertBefore(brgToko, pCari , pNew);
+            break;
+        }
+        case 6:
+        {
+            int key;
+            int found;
+            Pointer pCari = nullptr;
+
+            std::cout << "\nMasukan Kode Barang:\n";
+            key = getValueInt();
+            linearSearch(brgToko, key, found, pCari);
+
+            if(!isFound(found)) continue;
+
+            deleteAfter(brgToko, pCari , pNew);
             delete pNew;
-            pNew = nullptr;
+            break;
+        }
+        case 7:
+        {
+            int key;
+            int found;
+            Pointer pCari = nullptr;
+
+            std::cout << "\nMasukan Kode Barang:\n";
+            key = getValueInt();
+            linearSearch(brgToko, key, found, pCari);
+
+            if(!isFound(found)) continue;
+
+            deleteBefore(brgToko, pCari , pNew);
+            delete pNew;
+            break;
+        }
+        case 8:
+        {
+            int key;
+            int found;
+            Pointer pCari = nullptr;
+
+            std::cout << "\nMasukan Kode Barang:\n";
+            key = getValueInt();
+            linearSearch(brgToko, key, found, pCari);
+
+            if(!isFound(found)) continue;
+
+            deleteCurrent(brgToko, pCari , pNew);
+            delete pNew;
+            break;
+        }
+        case 9:
+            deleteFirst(brgToko, pNew);
+            delete pNew;
+            break;
+        case 10:
+            deleteLast(brgToko, pNew);
+            delete pNew;
             break;
         }
     } while (input != 0);
     
-
-    return 0;
+    destroyList(brgToko);
 }
