@@ -57,14 +57,16 @@ int getValueInt(int min = INT_MIN, int max = INT_MAX) {
 void createList(List& first);
 void createElement(Pointer& pBaru);
 void insertFirst(List& first, Pointer& pBaru);
-void traversalPrintList(const List first);
-void deleteFirst(List& first, Pointer& pHapus);
-void deleteLast(List& first, Pointer& pHapus);
-void linearSearch(List first, int key, int& found, Pointer& pSearch);
-bool isFound(int found);
+void traversalForward(const List first);
+Pointer deleteFirst(List& first);
+Pointer deleteLast(List& first);
+Pointer linearSearch(List& first, int key, bool& found);
+bool isFound(bool found);
 void insertAfter(List& first, Pointer& pSearch, Pointer& pNew);
-void deleteAfter(List& first, Pointer& pSearch, Pointer& pHapus);
-void deleteCurrent(List& first, Pointer& pSearch, Pointer& pHapus);
+void insertBefore(List& first, Pointer& pSearch , Pointer& pNew);
+Pointer deleteAfter(List& first, Pointer& pSearch);
+Pointer deleteBefore(List& first, Pointer& pSearch);
+Pointer deleteCurrent(List& first, Pointer& pSearch);
 int getSumJumlahList(const List first);
 float getMeanPriceList(const List first);
 int getLowestList(const List first);
@@ -72,7 +74,149 @@ int getHighestList(const List first);
 void printOutputList(const List barang);
 void destroyList(List& first);
 
+void destroyList(List& first) {
+    if (first == nullptr) return;
+    
+    Pointer pHelp = first, pHapus = nullptr;
 
+    while (pHelp != nullptr)
+    {
+        pHapus = pHelp;
+        pHelp = pHelp->next;
+        
+        delete pHapus;
+    }
+    
+    first = nullptr;
+}
+
+Pointer linearSearch(List& first, int key, bool& found) {
+    found = 0;
+    Pointer pSearch = first;
+
+    while (pSearch != nullptr && !found)
+    {
+        if (pSearch->barang.kodeBrg == key)
+        {
+            found = 1;
+            return pSearch;
+        } else
+        {
+            pSearch = pSearch->next;
+        }
+    }
+
+    return nullptr;
+}
+
+Pointer deleteBefore(List& first, Pointer& pSearch) {
+    Pointer pHapus = nullptr;
+
+    if (pSearch == first)
+    {
+        std::cerr << "Tidak ada barang sebelum ini! Tidak ada yang dihapus.\n";
+        return nullptr;
+    } else if (pSearch == first->next)
+    {
+        pHapus = deleteFirst(first);
+        return pHapus;
+    } else 
+    {
+        pHapus = pSearch->prev;
+        
+        pHapus->prev->next = pSearch;
+        pSearch->prev = pHapus->prev;
+
+        pHapus->next = nullptr;
+        pHapus->prev = nullptr;
+
+        return pHapus;
+    }
+}
+
+Pointer deleteCurrent(List& first, Pointer& pSearch) {
+    Pointer pHapus = nullptr;
+    
+    if (pSearch == first)
+    {
+        pHapus = deleteFirst(first);
+        return pHapus;
+    } else if (!pSearch->next)
+    {
+        pHapus = deleteLast(first);
+        return pHapus;
+    } else
+    {   
+        pSearch->next->prev = pSearch->prev;
+        pSearch->prev->next = pSearch->next;
+        pHapus = pSearch;
+
+        pHapus->next = nullptr;
+        pHapus->prev = nullptr;
+        
+        return pHapus;
+    } 
+}
+
+Pointer deleteAfter(List& first, Pointer& pSearch) {
+    Pointer pHapus = nullptr;
+
+    if (pSearch->next == nullptr)
+    {
+        pHapus = nullptr;
+        std::cerr << "Tidak ada barang setelah ini! Tidak ada yang dihapus.\n\n";
+        return nullptr;
+    } else
+    {
+        pHapus = pSearch->next;
+        pHapus->next->prev = pSearch;
+        pSearch->next = pHapus->next;
+
+        pHapus->prev = nullptr;
+        pHapus->next = nullptr;
+
+        return pHapus;
+    }
+}
+
+void insertBefore(List& first, Pointer& pSearch , Pointer& pNew) {
+    if (pSearch == first)
+    {
+        insertFirst(first, pNew);
+    } else
+    {    
+        pNew->next = pSearch;
+        pSearch->prev->next = pNew;
+        pNew->prev = pSearch->prev;
+        pSearch->prev = pNew;
+    }
+}
+
+void insertAfter(List& first, Pointer& pSearch, Pointer& pNew) {
+    if (pSearch->next == nullptr)
+    {
+        pSearch->next = pNew;
+        pNew->prev = pSearch;
+    } else
+    {
+        pNew->next = pSearch->next;
+        pSearch->next->prev = pNew;
+        pNew->prev = pSearch;
+        pSearch->next = pNew;
+    }
+} 
+
+bool isFound(bool found) {
+    if (!found) 
+    {
+        std::cout << "\nitem not found\n\n"; 
+        return false;
+    } else 
+    {
+        std::cout << "\nitem found\n\n"; 
+        return true;
+    }
+}
 
 void createList(List& first) {
     first = nullptr;
@@ -128,7 +272,7 @@ void insertLast(List& first, Pointer& pBaru) {
     }
 }
 
-void traversalForward(List first) {
+void traversalForward(const List first) {
     if (first == nullptr)
     {
         std::cout << "list kosong" << std::endl;
@@ -304,6 +448,12 @@ int getSumJumlah(List& first) {
 }
 
 void printOutputList(List barang) {
+    if (barang == nullptr)
+    {
+        std::cout << "\nerror: list kosong!\n\n";
+        return;
+    }
+
     std::cout << std::right << std::setfill(' '); // reset to normal state for concistency
 
     std::cout << "\n" << std::setw(50) << "Daftar Barang PT Informatika\n";
@@ -315,7 +465,7 @@ void printOutputList(List barang) {
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
 
     //bagian isi
-    traversalForward(barang) 
+    traversalForward(barang);
     
     //bagian jumlah total
     std::cout << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n"
@@ -327,19 +477,6 @@ void printOutputList(List barang) {
     << "HARGA TERENDAH: " << std::setw(MEDIUM_WIDTH) << getLowest(barang) << "\n"
     << "RATA-RATA HARGA: " << std::setw(MEDIUM_WIDTH) << getMeanPrice(barang)
     << std::setfill('-') << std::setw(75) << " \n" << std::setfill(' ') << "\n";
-}
-
-void printInterface() {
-    std::cout << "Pilih aksi yang ingin dilakukan:\n"
-    << "1. Lihat Tabel dari atas list\n"
-    << "2. Lihat Tabel dari bawah list\n"
-    << "3. Masukan barang dari atas list\n"
-    << "4. Masukan barang dari bawah list\n"
-    << "5. Hapus barang paling atas list\n"
-    << "6. Hapus barang paling bawah list\n"
-    << "0. Keluar\n\n";
-    
-    std::cout << "input: ";
 }
 
 int main() {
@@ -393,12 +530,12 @@ int main() {
         case 4:
         {
             int key;
-            int found;
+            bool found;
             Pointer pCari = nullptr;
 
             std::cout << "\nMasukan Kode Barang:\n";
             key = getValueInt();
-            linearSearch(brgToko, key, found, pCari);
+            pCari = linearSearch(brgToko, key, found);
 
             if(!isFound(found)) continue;
 
@@ -409,13 +546,13 @@ int main() {
         case 5:
         {
             int key;
-            int found;
+            bool found;
             Pointer pCari = nullptr;
 
             std::cout << "\nMasukan Kode Barang:\n";
             key = getValueInt();
-            linearSearch(brgToko, key, found, pCari);
-
+            pCari = linearSearch(brgToko, key, found);
+            
             if(!isFound(found)) continue;
 
             createElement(pNew);
@@ -425,57 +562,57 @@ int main() {
         case 6:
         {
             int key;
-            int found;
+            bool found;
             Pointer pCari = nullptr;
 
             std::cout << "\nMasukan Kode Barang:\n";
             key = getValueInt();
-            linearSearch(brgToko, key, found, pCari);
+            pCari = linearSearch(brgToko, key, found);
 
             if(!isFound(found)) continue;
 
-            deleteAfter(brgToko, pCari , pNew);
+            pNew = deleteAfter(brgToko, pCari);
             delete pNew;
             break;
         }
         case 7:
         {
             int key;
-            int found;
+            bool found;
             Pointer pCari = nullptr;
 
             std::cout << "\nMasukan Kode Barang:\n";
             key = getValueInt();
-            linearSearch(brgToko, key, found, pCari);
+            pCari = linearSearch(brgToko, key, found);
 
             if(!isFound(found)) continue;
 
-            deleteBefore(brgToko, pCari , pNew);
+            pNew = deleteBefore(brgToko, pCari);
             delete pNew;
             break;
         }
         case 8:
         {
             int key;
-            int found;
+            bool found;
             Pointer pCari = nullptr;
 
             std::cout << "\nMasukan Kode Barang:\n";
             key = getValueInt();
-            linearSearch(brgToko, key, found, pCari);
+            pCari = linearSearch(brgToko, key, found);
 
             if(!isFound(found)) continue;
 
-            deleteCurrent(brgToko, pCari , pNew);
+            pNew = deleteCurrent(brgToko, pCari);
             delete pNew;
             break;
         }
         case 9:
-            deleteFirst(brgToko, pNew);
+            pNew = deleteFirst(brgToko);
             delete pNew;
             break;
         case 10:
-            deleteLast(brgToko, pNew);
+            pNew = deleteLast(brgToko);
             delete pNew;
             break;
         }

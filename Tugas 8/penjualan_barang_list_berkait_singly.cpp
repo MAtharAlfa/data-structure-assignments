@@ -62,7 +62,9 @@ void deleteLast(List& first, Pointer& pHapus);
 void linearSearch(List first, int key, int& found, Pointer& pSearch);
 bool isFound(int found);
 void insertAfter(List& first, Pointer& pSearch, Pointer& pNew);
+void insertBefore(List& first, Pointer& pSearch , Pointer& pNew);
 void deleteAfter(List& first, Pointer& pSearch, Pointer& pHapus);
+void deleteBefore(List& first, Pointer& pSearch , Pointer& pHapus);
 void deleteCurrent(List& first, Pointer& pSearch, Pointer& pHapus);
 int getSumJumlahList(const List first);
 float getMeanPriceList(const List first);
@@ -306,8 +308,7 @@ void deleteCurrent(List& first, Pointer& pSearch, Pointer& pHapus) {
         pHapus = pSearch;
         pHelp->next = pSearch->next;
         pSearch->next = nullptr;
-    }
-    
+    } 
 }
 
 int getHighestList(const List first) {
@@ -540,7 +541,9 @@ int main() {
             key = getValueInt();
             linearSearch(brgToko, key, found, pCari);
 
-            if(!isFound(found)) continue;
+            if(!isFound(found)) {
+                continue;
+            }
 
             deleteAfter(brgToko, pCari , pNew);
             delete pNew;
