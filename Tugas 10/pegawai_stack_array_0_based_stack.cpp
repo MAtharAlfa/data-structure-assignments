@@ -4,9 +4,10 @@ Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 29/04/2026
 Deskripsi    : Program akan menampilkan gaji pegawai sesuai dengan golongan yang didapat dengan menggunakan
-               struktur data Stack Linked List
+               struktur data Stack Array
 */
 
+const int MAX_ELEMENT = 255;
 const int SHORT_WIDTH = 5;
 const int long LONG_WIDTH = 15;
 
@@ -14,86 +15,84 @@ const int long LONG_WIDTH = 15;
 #include <iomanip>
 
 struct Pegawai {
+    int gol;
     std::string NIP;
     std::string nama;
-    int gol;
 };
 
-struct Node {
-    Pegawai data;
-    Node* next;
+struct Stack {
+    int size;
+    Pegawai data[MAX_ELEMENT];
 };
 
-typedef Node* Pointer;
-typedef Pointer Stack;
-
-Pointer createNode();
-Pointer createStack(Stack& list);
+Pegawai createNewElement();
+void createStack(Stack& S);
 long long getGaji(int gol);
 long long getTunjangan(int gol);
 long long getTotal(int gol);
-long long getJumlahGaji(Stack top);
-long long getJumlahTunjangan(Stack top);
-long long getJumlahTotal(Stack top);
-long long getRata(Stack top);
-void printTable(Stack top);
+long long getJumlahGaji(Stack S);
+long long getJumlahTunjangan(Stack S);
+long long getJumlahTotal(Stack S);
+long long getRata(Stack S);
+void printTable(Stack S);
 int getChoice();
 void printChoices();
 void runMenu(Stack& pegawai);
 
-Pointer createNode() {
-    Pointer pNew = new Node;
+Pegawai createNewElement() {
+    Pegawai pNew;
 
     std::cout << "Masukan NIP: ";
-    std::cin >> pNew->data.NIP;
+    std::cin >> pNew.NIP;
 
     std::cout << "Masukan nama: ";
-    std::cin >> pNew->data.nama;
+    std::cin >> pNew.nama;
 
     std::cout << "Masukan Gol: ";
-    std::cin >> pNew->data.gol;
-    pNew->next = nullptr;
+    std::cin >> pNew.gol;
 
     return pNew;
 }
 
-Pointer createStack(Stack& stack) {
-    stack = nullptr;
-
-    return stack;
+void createStack(Stack& stack) {
+    stack.size = 0;
 }
 
-void push(Stack& top, Pointer& pNew) {
-    if (!top) 
+void push(Stack& S, Pegawai& pNew) {
+    if (S.size == MAX_ELEMENT)
     {
-        top = pNew;
-    } else 
+        std::cerr << "Stack sudah penuh!" << std::endl;
+        return;
+    } else
     {
-        pNew->next = top;
-        top = pNew;
+        S.size++;
+
+        if(S.size == 0) {S.data[0] = pNew; return;}
+
+        for (size_t i = S.size-1; i > 0; --i)
+        {
+            S.data[i] = S.data[i-1];
+        }
+
+        S.data[0] = pNew;
     }
 }
 
-Pointer pop(Stack& top) {
-    Pointer pHasil = nullptr;
-
-    if (!top) {
-        std::cerr << "List kosong, tidak ada yang dihapus!";
-        return nullptr;
-    } else if (top->next == nullptr)
+void pop(Stack& S, Pegawai& pHasil) {
+    if (S.size < 1)
     {
-        pHasil = top;
-
-        top->next = nullptr;
-        top = nullptr;
+        std::cerr << "Stack sudah kosong!" << std::endl;
+        return;
     } else 
     {
-        pHasil = top;
-        top = top->next;
-        pHasil->next = nullptr;
-    }
+        pHasil = S.data[0];
+        S.size--;
 
-    return pHasil;
+        for (size_t i = 0; i < S.size; ++i)
+        {
+            S.data[i] = S.data[i+1]; 
+        }
+    }
 }
 
 long long getGaji(int gol) {
@@ -121,74 +120,77 @@ long long getTotal(int gol) {
     return total;
 }
 
-long long getJumlahGaji(Stack top) {
+long long getJumlahGaji(Stack S) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
-    do
+    int cBantu = S.size-1;
+    
+    while (cBantu >= 0)
     {
-        jumlah += getGaji(pTemp->data.gol);
-        pTemp = pTemp->next;
-    } while (pTemp != nullptr);
+        jumlah += getGaji(S.data[cBantu].gol);
+        cBantu--;
+    }
     
     return jumlah;
 }
 
-long long getJumlahTunjangan(Stack top) {
+long long getJumlahTunjangan(Stack S) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
-    do
+    int cBantu = S.size-1;
+    
+    while (cBantu >= 0)
     {
-        jumlah += getTunjangan(pTemp->data.gol);
-        pTemp = pTemp->next;
-    } while (pTemp != nullptr);
+        jumlah += getTunjangan(S.data[cBantu].gol);
+        cBantu--;
+    }
     
     return jumlah;
 }
 
-long long getJumlahTotal(Stack top) {
+long long getJumlahTotal(Stack S) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
-    do
+    int cBantu = S.size-1;
+    
+    while (cBantu >= 0)
     {
-        jumlah += getTotal(pTemp->data.gol);
-        pTemp = pTemp->next;
-    } while (pTemp != nullptr);
+        jumlah += getTotal(S.data[cBantu].gol);
+        cBantu--;
+    }
     
     return jumlah;
 }
 
-long long getRata(Stack top) {
+long long getRata(Stack S) {
     long long jumlah = 0; int n = 0;
 
-    if (top == nullptr) 
+    if (S.size == 0) 
     {
         std::cerr << "Error! List is empty";
         return 0;
     }
 
-    Pointer pTemp = top;
-    do
+    int cBantu = S.size-1;
+    while (cBantu >= 0) 
     {
-        jumlah += getTotal(pTemp->data.gol);
+        jumlah += getTotal(S.data[cBantu].gol);
 
         n++;
-        pTemp = pTemp->next;
-    } while (pTemp != nullptr);
+        cBantu--;
+    }
     
     return (long long)jumlah/n;
 }
 
-void printTable(Stack top) {
-    if (!top) 
+void printTable(Stack S) {
+    if (S.size == 0) 
     {
         std::cerr << "\nList is empty!\n";
         return;
     }
 
-    int nomor = 1; Pointer pTraverse = top;
+    int nomor = 1; int cBantu = 0;
 
     std::cout << std::setw(25) << " " << "DAFTAR GAJI PEGAWAI PT. INFORMATIKA\n";
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
@@ -201,26 +203,27 @@ void printTable(Stack top) {
         << std::setw(LONG_WIDTH) << "Total" << "\n";
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
     
-    do
+    // std::cout << "size: " << S.size;
+    while (cBantu < S.size)
     {
         std::cout << std::setw(SHORT_WIDTH) << nomor
-        << std::setw(LONG_WIDTH) << pTraverse->data.NIP
-        << std::setw(LONG_WIDTH) << pTraverse->data.nama
-        << std::setw(SHORT_WIDTH) << pTraverse->data.gol
-        << std::setw(LONG_WIDTH) << getGaji(pTraverse->data.gol)
-        << std::setw(LONG_WIDTH) << getTunjangan(pTraverse->data.gol)
-        << std::setw(LONG_WIDTH) << getTotal(pTraverse->data.gol) << "\n";
+        << std::setw(LONG_WIDTH) << S.data[cBantu].NIP
+        << std::setw(LONG_WIDTH) << S.data[cBantu].nama
+        << std::setw(SHORT_WIDTH) << S.data[cBantu].gol
+        << std::setw(LONG_WIDTH) << getGaji(S.data[cBantu].gol)
+        << std::setw(LONG_WIDTH) << getTunjangan(S.data[cBantu].gol)
+        << std::setw(LONG_WIDTH) << getTotal(S.data[cBantu].gol) << "\n";
 
-        pTraverse = pTraverse->next; nomor++;
-    } while (pTraverse != nullptr);
+        cBantu++; nomor++;
+    }
     
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
     std::cout << std::setw(SHORT_WIDTH + LONG_WIDTH) << "Jumlah: " << std::setw(LONG_WIDTH + SHORT_WIDTH) << " "
-    << std::setw(LONG_WIDTH) << getJumlahGaji(top)
-    << std::setw(LONG_WIDTH) << getJumlahTunjangan(top)
-    << std::setw(LONG_WIDTH) << getJumlahTotal(top) << "\n";
+    << std::setw(LONG_WIDTH) << getJumlahGaji(S)
+    << std::setw(LONG_WIDTH) << getJumlahTunjangan(S)
+    << std::setw(LONG_WIDTH) << getJumlahTotal(S) << "\n";
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
-    std::cout << "Rata-rata Gaji: " << getRata(top) << "\n"; 
+    std::cout << "Rata-rata Gaji: " << getRata(S) << "\n"; 
 }
 
 int getChoice() {
@@ -254,16 +257,20 @@ void runMenu(Stack& pegawai) {
             printTable(pegawai);
             break;
         case 2:
-            Pointer pNew;
-            pNew = createNode();
+        {
+            Pegawai pNew;
+            pNew = createNewElement();
             push(pegawai, pNew);
 
             break;
+        }
         case 3:
-            pop(pegawai);
+        {
+            Pegawai pHasil;
+            pop(pegawai, pHasil);
 
             break;
-        
+        }
         default:
             std::cout << "Terima kasih sudah menggunakan program ini!";
             break;

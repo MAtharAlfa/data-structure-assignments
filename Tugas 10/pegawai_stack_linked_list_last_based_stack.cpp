@@ -4,7 +4,7 @@ Nama         : Muhammad Athar Alfarisi
 NPM          : 140810250005
 Tanggal Buat : 29/04/2026
 Deskripsi    : Program akan menampilkan gaji pegawai sesuai dengan golongan yang didapat dengan menggunakan
-               struktur data Stack Linked List
+               struktur data Stack Linked List dengan insert last dan delete last
 */
 
 const int SHORT_WIDTH = 5;
@@ -22,6 +22,7 @@ struct Pegawai {
 struct Node {
     Pegawai data;
     Node* next;
+    Node* prev;
 };
 
 typedef Node* Pointer;
@@ -32,14 +33,24 @@ Pointer createStack(Stack& list);
 long long getGaji(int gol);
 long long getTunjangan(int gol);
 long long getTotal(int gol);
-long long getJumlahGaji(Stack top);
-long long getJumlahTunjangan(Stack top);
-long long getJumlahTotal(Stack top);
-long long getRata(Stack top);
-void printTable(Stack top);
+long long getJumlahGaji(Stack head);
+long long getJumlahTunjangan(Stack head);
+long long getJumlahTotal(Stack head);
+long long getRata(Stack head);
+void printTable(Stack head);
 int getChoice();
 void printChoices();
 void runMenu(Stack& pegawai);
+
+Pointer getLast(Stack& head) {
+    Pointer pLast = head;
+    while(pLast->next != nullptr)
+    {
+        pLast = pLast->next;
+    }
+
+    return pLast;
+}
 
 Pointer createNode() {
     Pointer pNew = new Node;
@@ -53,6 +64,7 @@ Pointer createNode() {
     std::cout << "Masukan Gol: ";
     std::cin >> pNew->data.gol;
     pNew->next = nullptr;
+    pNew->prev = nullptr;
 
     return pNew;
 }
@@ -63,37 +75,41 @@ Pointer createStack(Stack& stack) {
     return stack;
 }
 
-void push(Stack& top, Pointer& pNew) {
-    if (!top) 
+void push(Stack& head, Pointer& pNew) {
+    if (!head) 
     {
-        top = pNew;
+        head = pNew;
     } else 
     {
-        pNew->next = top;
-        top = pNew;
+        Pointer last = getLast(head);
+        last->next = pNew;
+        pNew->prev = last;
     }
 }
 
-Pointer pop(Stack& top) {
-    Pointer pHasil = nullptr;
+Pointer pop(Stack& head) {
+    Pointer pHapus = nullptr;
 
-    if (!top) {
+    if (!head) {
         std::cerr << "List kosong, tidak ada yang dihapus!";
         return nullptr;
-    } else if (top->next == nullptr)
+    } else if (head->next == nullptr)
     {
-        pHasil = top;
+        pHapus = head;
 
-        top->next = nullptr;
-        top = nullptr;
+        head->next = nullptr;
+        head->prev = nullptr;
+        head = nullptr;
     } else 
     {
-        pHasil = top;
-        top = top->next;
-        pHasil->next = nullptr;
+        Pointer last = getLast(head);
+
+        last->prev->next = nullptr;
+        last->prev = nullptr;
+        pHapus = last;
     }
 
-    return pHasil;
+    return pHapus;
 }
 
 long long getGaji(int gol) {
@@ -121,10 +137,10 @@ long long getTotal(int gol) {
     return total;
 }
 
-long long getJumlahGaji(Stack top) {
+long long getJumlahGaji(Stack head) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
+    Pointer pTemp = head;
     do
     {
         jumlah += getGaji(pTemp->data.gol);
@@ -134,10 +150,10 @@ long long getJumlahGaji(Stack top) {
     return jumlah;
 }
 
-long long getJumlahTunjangan(Stack top) {
+long long getJumlahTunjangan(Stack head) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
+    Pointer pTemp = head;
     do
     {
         jumlah += getTunjangan(pTemp->data.gol);
@@ -147,10 +163,10 @@ long long getJumlahTunjangan(Stack top) {
     return jumlah;
 }
 
-long long getJumlahTotal(Stack top) {
+long long getJumlahTotal(Stack head) {
     long long jumlah = 0;
 
-    Pointer pTemp = top;
+    Pointer pTemp = head;
     do
     {
         jumlah += getTotal(pTemp->data.gol);
@@ -160,16 +176,16 @@ long long getJumlahTotal(Stack top) {
     return jumlah;
 }
 
-long long getRata(Stack top) {
+long long getRata(Stack head) {
     long long jumlah = 0; int n = 0;
 
-    if (top == nullptr) 
+    if (head == nullptr) 
     {
         std::cerr << "Error! List is empty";
         return 0;
     }
 
-    Pointer pTemp = top;
+    Pointer pTemp = head;
     do
     {
         jumlah += getTotal(pTemp->data.gol);
@@ -181,14 +197,15 @@ long long getRata(Stack top) {
     return (long long)jumlah/n;
 }
 
-void printTable(Stack top) {
-    if (!top) 
+void printTable(Stack head) {
+    if (!head) 
     {
         std::cerr << "\nList is empty!\n";
         return;
     }
 
-    int nomor = 1; Pointer pTraverse = top;
+    int nomor = 1; Pointer pTraverse = getLast(head);
+    
 
     std::cout << std::setw(25) << " " << "DAFTAR GAJI PEGAWAI PT. INFORMATIKA\n";
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
@@ -211,16 +228,16 @@ void printTable(Stack top) {
         << std::setw(LONG_WIDTH) << getTunjangan(pTraverse->data.gol)
         << std::setw(LONG_WIDTH) << getTotal(pTraverse->data.gol) << "\n";
 
-        pTraverse = pTraverse->next; nomor++;
+        pTraverse = pTraverse->prev; nomor++;
     } while (pTraverse != nullptr);
     
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
     std::cout << std::setw(SHORT_WIDTH + LONG_WIDTH) << "Jumlah: " << std::setw(LONG_WIDTH + SHORT_WIDTH) << " "
-    << std::setw(LONG_WIDTH) << getJumlahGaji(top)
-    << std::setw(LONG_WIDTH) << getJumlahTunjangan(top)
-    << std::setw(LONG_WIDTH) << getJumlahTotal(top) << "\n";
+    << std::setw(LONG_WIDTH) << getJumlahGaji(head)
+    << std::setw(LONG_WIDTH) << getJumlahTunjangan(head)
+    << std::setw(LONG_WIDTH) << getJumlahTotal(head) << "\n";
     std::cout << std::setfill('-') << std::setw(90) << " " << std::setfill(' ') << "\n";
-    std::cout << "Rata-rata Gaji: " << getRata(top) << "\n"; 
+    std::cout << "Rata-rata Gaji: " << getRata(head) << "\n"; 
 }
 
 int getChoice() {

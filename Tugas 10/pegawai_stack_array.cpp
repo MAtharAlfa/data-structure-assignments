@@ -25,7 +25,6 @@ struct Stack {
     int top;
 };
 
-bool checkFound(bool found);
 Pegawai createNewElement();
 void createStack(Stack& S);
 long long getGaji(int gol);
@@ -143,7 +142,7 @@ long long getJumlahTotal(Stack S) {
     
     while (cBantu >= 0)
     {
-        jumlah += getGaji(S.data[cBantu].gol);
+        jumlah += getTotal(S.data[cBantu].gol);
         cBantu--;
     }
     
