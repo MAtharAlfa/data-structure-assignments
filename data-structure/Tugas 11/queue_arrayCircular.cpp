@@ -1,4 +1,4 @@
-/*  Nama program    :   Linked List Queue Pegawai
+/*  Nama program    :   Array Circular Queue Pegawai
     Nama            :   Muhammad Athar Alfarisi (Khaled Meshaal Ahmadinejad Mujaddid Thariq Mardova Fadhilah 250056, M<uhammad Faiz Hariy Nugroho 250029)
     NPM             :   140810250005
     Tanggal buat    :   17 Mei 2026
