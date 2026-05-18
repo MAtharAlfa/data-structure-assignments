@@ -60,7 +60,7 @@ start:
     ; 1193180 in hex is 0x123CC — fits in 32 bits but not 16.
     ; We use DX:AX division.
     mov  ax, 34DCh         ; low word of 1193180  (0x1_34DC in 32-bit)
-    mov  dx, 0012h         ; high word            (0x12 * 65536 + 0x34DC = 1193180)
+    mov  dx, 012h         ; high word            (0x12 * 65536 + 0x34DC = 1193180)
     div  bx                 ; AX = quotient (divisor), DX = remainder
 
     out  42h, al            ; send low byte of divisor to channel 2
